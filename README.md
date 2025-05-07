@@ -53,3 +53,50 @@ cd AegisNet
 pip install -r requirements.txt
 python app.py
 ```
+
+## Project Structure
+
+├── app.py # Flask application
+├── model.py # GAT model definition
+├── utils.py # Helper functions for graph construction and visualization
+├── templates/ # HTML files
+├── static/ # Static files and visualizations
+├── models/ # Pre-trained models
+├── user_data/ # JSON files for user credentials
+└── requirements.txt # Python dependencies
+
+## Usage
+
+1. Start the Flask app using python app.py.
+2. Open a browser and go to http://localhost:5000.
+3. Create an account or log in.
+4. Upload a CSV file containing transaction data.
+5. View model predictions and fraud visualizations.
+
+## Visualization
+
+Correlation heatmaps
+Bar charts for fraud statistics
+Scatter plots of transaction distributions
+Plots are saved with timestamp-based filenames to prevent overwriting
+
+## Technology Stack
+
+Python
+Flask
+PyTorch Geometric
+NumPy, Pandas
+Matplotlib, Seaborn
+
+## Security
+
+Passwords are hashed before storing
+Uploaded files are sanitized using secure_filename
+User data is stored in JSON format (for demo purposes only)
+
+## Future Work
+
+Use a production-ready database (e.g., PostgreSQL)
+Support real-time graph updates
+Add model explanation tools (e.g., SHAP)
+Consider LLM integration only if textual data is introduced
