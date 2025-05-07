@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="static\images\Aegisnet_logo.png" />
+  <title>AegisNet Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&family=Roboto+Slab&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    nav {
+      background-color: rgba(74, 2, 194, 0.85); 
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);  
+    }
+
+    nav h1 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 48px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 30px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    .user-icon:hover {
+      transform: scale(1.1); 
+    }
+
+    .landing {
+      background-image: url('static/images/bg.jpg');
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      flex-direction: column;
+}
+
+    .landing h1 {
+      font-family: 'Roboto Slab', serif;
+      font-size: 72px;
+      color: white;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    .content {
+      padding: 60px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .content h2 {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .separator {
+      width: 100px;
+      height: 4px;
+      background-color: #5e03fc;
+      margin-bottom: 30px;
+    }
+
+    .content p {
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 20px rgba(94, 3, 252, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      background-color: white;
+    }
+
+    .content a {
+      color: #5e03fc;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+     
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -320px;
+      width: 320px;
+      height: 100%;
+      background-color: white;
+      color: #5e03fc;
+      transition: right 0.3s ease;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
+
+    .sidebar.open {
+      right: 0;
+    }
+
+    .back-arrow {
+      align-self: flex-start;
+      padding: 20px;
+      font-size: 24px;
+      color: #5e03fc;
+      cursor: pointer;
+    }
+
+    .sidebar img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 10px 0;
+      object-fit: cover;
+    }
+
+    .sidebar h3 {
+      margin: 5px 0;
+    }
+
+    .sidebar p {
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      color: #5e03fc;
+      text-decoration: underline;
+      font-weight: bold;
+      margin: 10px 0;
+      font-size: 16px;
+      text-align: center;
+      display: block;
+      cursor: pointer;
+    }
+
+    .sidebar a:hover {
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h1>AegisNet</h1>
+    <div class="nav-links">
+      <a href="{{ url_for('analyze') }}">Analyze</a>
+      <a href="{{ url_for('graphs_page') }}">Graphs</a>
+      <img src="static/images/user.png" alt="User Icon" class="user-icon" onclick="toggleSidebar()">
+    </div>
+  </nav>
+
+  <div class="landing">
+    <h1>AegisNet</h1>
+  </div>
+
+  <div class="content">
+    <h2>Introduction</h2>
+    <div class="separator"></div>
+    <p>
+      Welcome to <strong>AegisNet</strong>!<br />
+      Developed by <strong>Nusla Ismail</strong> as part of a final-year project, AegisNet is a cutting-edge fraud detection platform powered by the revolutionary GAT-enhanced Dynamic Graph Neural Network (DGNN) model. Designed to tackle the complexities of financial fraud, AegisNet combines advanced AI with real-time analytics to uncover hidden patterns and safeguard financial systems. Experience the future of financial security with AegisNet!
+    </p>
+
+    <h2>How to use</h2>
+    <div class="separator"></div>
+    <p>
+      Click on  <a href="{{ url_for('analyze') }}">Analyze</a> to upload a CSV file. 
+      Press <strong>Detect Fraud</strong> to run the fraud analysis. <br>
+      Generated fraud graphs will be saved and accessible under the <strong><a href="{{ url_for('graphs_page') }}">Graphs</strong> section.
+    </p>
+  </div>
+ 
+ 
+  <div class="sidebar" id="sidebar">
+    <div class="back-arrow" onclick="toggleSidebar()">&#8592;</div>
+    <img src="static/images/user.png" alt="User Profile Picture" />
+    <h3 id="usernameDisplay">{{ username }}</h3>
+    <p id="userEmailDisplay">{{ email }}</p>
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+ 
+  </script>
+</body>
+</html>

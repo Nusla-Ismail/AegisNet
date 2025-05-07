@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="static/images/Aegisnet_logo.png" />
+    <title>AegisNet - Graphs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Slab&display=swap" rel="stylesheet" />
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: white;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: rgba(74, 2, 194, 0.7);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav h1 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 48px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 30px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100%;
+            background-color: white;
+            color: #5e03fc;
+            transition: right 0.3s ease;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+        .back-arrow {
+            align-self: flex-start;
+            padding: 20px;
+            font-size: 24px;
+            color: #5e03fc;
+            cursor: pointer;
+        }
+
+        .sidebar img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 10px 0;
+            object-fit: cover;
+        }
+
+        .sidebar h3, .sidebar p, .sidebar a {
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: #5e03fc;
+            text-decoration: underline;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .sidebar a:hover {
+            text-decoration: none;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            grid-gap: 20px;
+            padding: 40px;
+        }
+
+        .graph-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .generated-graph {
+            width: 100%;
+            height: auto;
+            max-height: 300px;  
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .graph-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .graph-actions button {
+            padding: 5px 15px;
+            background: #5e03fc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .no-graphs {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>AegisNet</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('analyze') }}">Analyze</a>
+            <img src="static/images/user.png" alt="User Icon" class="user-icon" onclick="toggleSidebar()">
+        </div>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="back-arrow" onclick="toggleSidebar()">&#8592;</div>
+        <img src="static/images/user.png" alt="User Profile Picture" />
+        <h3 id="usernameDisplay">{{ username }}</h3>
+        <p id="userEmailDisplay">{{ email }}</p>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <h2>Generated Graphs</h2>
+    <div class="grid" id="graphContainer">
+        {% if graph_files %}
+            {% for graph_path in graph_files %}
+                <div class="graph-card">
+                    <img src="{{ graph_path }}" class="generated-graph" alt="Generated Graph">
+                    <div class="graph-actions">
+                        <button onclick="downloadGraph('{{ graph_path }}')">Download PNG</button>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for i in range(graph_files|length, 4) %} <div class="graph-card"></div> {% endfor %}
+        {% else %}
+            <p class="no-graphs">No graphs to display.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        window.onload = () => {
+            console.log("JS loaded and ready.");
+
+             
+            window.toggleSidebar = () => {
+                document.getElementById('sidebar').classList.toggle('open');
+            };
+        };
+
+        function downloadGraph(path) {
+            const link = document.createElement('a');
+            link.href = path;
+            link.download = path.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+     
+    </script>
+
+</body>
+</html>

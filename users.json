@@ -1,0 +1,22 @@
+{
+    "nush": {
+        "email": "nush@gmail.com",
+        "password": "scrypt:32768:8:1$DZ3g8p6UlbBTT3XZ$b5aeac8208e509a1fcd65d828095c25f3bb2723b358ce83f5922f67bd487b984717d1a34b3b37f795787152ed2e227a6404435141a4e067d9ec92b600372d142"
+    },
+    "user": {
+        "email": "user@email.com",
+        "password": "scrypt:32768:8:1$Tq4oA5Kj3wgWQVqs$4fd6a4f3c49d65b3b72ec1f4533a0dfc37e72b1c3712c5faac2f1a4c7024f32ee8afa7131206d9c3ab7c27208f42c6884603178e241e23675d852bf3e8b5ef9d"
+    },
+    "user0": {
+        "email": "user@email.com",
+        "password": "scrypt:32768:8:1$17uwtOKaokBgjwMx$3693288f332af6698b2cba8488d659a9c0ebc174a86e65d1e99c613aecc54fa022f38c5766f59afe4a0ae79e20bcc7d162ff9642eeae4ed63f769396f5c2b607"
+    },
+    "user12": {
+        "email": "asbc@email.com",
+        "password": "scrypt:32768:8:1$VixR1KFyhGal1H7P$551919bac1c767f58fcd51a23832d9f8de44479e7b28a5c0ee041e82136b03b8eb2275e316b4d32f22e0161e19d7bae2fbb9e9b515c9d2740145de05b19f266a"
+    },
+    "test": {
+        "email": "test@email.com",
+        "password": "scrypt:32768:8:1$ab08bqUcwJahJJPy$5d153b031b8ab83498ba63f93d507e32c7173a60ef661f2da1614b687db6fcd14ed086c5a25f8898c1bc29767a29d789925cc854b1ffcd57c59089cf8c6c5322"
+    }
+}

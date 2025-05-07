@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="static\images\Aegisnet_logo.png" />
+    <title>AegisNet - Analyze</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Slab&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('static/images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #222;
+            min-height: 100vh;
+        }
+
+        nav {
+            background-color: rgba(74, 2, 194, 0.7);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav h1 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 48px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 30px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .container {
+            padding: 40px;
+            max-width: 900px;
+            margin: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            font-family: 'Roboto', sans-serif;
+            font-size: 48px;
+            color: white;
+            text-align: center;
+            margin-top: 150px;
+            margin-bottom: 40px;
+        }
+
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100%;
+            background-color: white;
+            color: #5e03fc;
+            transition: right 0.3s ease;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
+        .back-arrow {
+            align-self: flex-start;
+            padding: 20px;
+            font-size: 24px;
+            color: #5e03fc;
+            cursor: pointer;
+        }
+
+        .sidebar img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 10px 0;
+            object-fit: cover;
+        }
+
+        .sidebar h3 {
+            margin: 5px 0;
+        }
+
+        .sidebar p {
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            color: #5e03fc;
+            text-decoration: underline;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 16px;
+            text-align: center;
+            display: block;
+            cursor: pointer;
+        }
+
+        .sidebar a:hover {
+            text-decoration: none;
+        }
+
+        .file-upload-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .file-upload-label {
+            background-color: #5e03fc;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+            width: 300px;
+        }
+
+        .file-upload-label:hover {
+            background-color: #4a02c4;
+        }
+
+        #file-upload {
+            display: none;
+        }
+
+        /* File name display */
+        .file-name-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 300px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: white;
+        }
+
+        .remove-file {
+            color: #ff4d4d;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            padding: 10px 30px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #upload-button {
+            background-color: #4a02c2;
+        }
+
+        #upload-button:hover {
+            background-color: #3b01a6;
+        }
+
+        #upload-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            color: #666;
+        }
+
+        #detect-fraud-button {
+            background-color: #ff4757;
+        }
+
+        #detect-fraud-button:hover {
+            background-color: #ff6b81;
+        }
+
+        #detect-fraud-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            color: #666;
+        }
+
+        
+        #fraud-results-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #fraud-results-popup h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4a02c2;
+        }
+
+        #fraud-results-content {
+            margin-bottom: 20px;
+        }
+
+        #fraud-results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        #fraud-results-table th {
+            background-color: #f5f5f5;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        #fraud-results-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        #fraud-results-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .fraud-highlight {
+            background-color: #fff5f5;
+            color: #ff4757;
+            font-weight: bold;
+        }
+
+        .no-fraud {
+            text-align: center;
+            padding: 20px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>AegisNet</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('graphs_page') }}">Graphs</a>
+            <img src="static\\images\\user.png" alt="User Icon" class="user-icon" onclick="toggleSidebar()">
+        </div>
+    </nav>
+
+    <div class="sidebar" id="sidebar">
+        <div class="back-arrow" onclick="toggleSidebar()">&#8592;</div>
+        <img src="static/images/user.png" alt="User Profile Picture" />
+        <h3 id="usernameDisplay">{{ username }}</h3>
+        <p id="userEmailDisplay">{{ email }}</p>
+
+       
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <div class="container">
+        <div class="header">Fraud Detection Area</div>
+
+        <div class="file-upload-area">
+            <div id="file-name-display" class="file-name-display" style="display: none;">
+                <span id="file-name"></span>
+                <span class="remove-file" onclick="removeFile()">X</span>
+            </div>
+            <label for="file-upload" class="file-upload-label">Upload CSV</label>
+            <input type="file" id="file-upload" accept=".csv" onchange="handleFileUpload(event)">
+        </div>
+
+        <div class="buttons">
+            <button id="detect-fraud-button" onclick="detectFraud()" disabled>Detect Fraud</button>
+        </div>
+    </div>
+
+    <div id="fraud-results-popup">
+        <h2>Fraud Detection Results</h2>
+        <div id="fraud-results-content">
+            <p>Analyzing transactions for fraud...</p>
+        </div>
+        <div style="display: flex; justify-content: center; margin-top: 20px;">
+            <button onclick="closeFraudResults()" style="padding: 10px 20px; background-color: #4a02c2; color: white; border: none; border-radius: 5px; cursor: pointer;">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        let uploadedFile = null;
+        const detectFraudButton = document.getElementById('detect-fraud-button');
+
+        
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.name.endsWith('.csv')) {
+                document.getElementById('file-name-display').style.display = 'flex';
+                document.getElementById('file-name').textContent = file.name;
+                uploadedFile = file;
+                detectFraudButton.disabled = false;
+            } else if (file) {
+                alert('Please upload a valid CSV file');
+                resetFile();
+            } else {
+                resetFile();
+            }
+        }
+
+       
+        function resetFile() {
+            document.getElementById('file-upload').value = '';
+            document.getElementById('file-name-display').style.display = 'none';
+            uploadedFile = null;
+            detectFraudButton.disabled = true;
+        }
+
+       
+        function removeFile() {
+            resetFile();
+        }
+
+        
+        function detectFraud() {
+            if (!uploadedFile) {
+                alert('Please upload a CSV file first');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', uploadedFile);
+
+            
+            document.getElementById('fraud-results-content').innerHTML = '<p>Analyzing transactions for fraud...</p>';
+            document.getElementById('fraud-results-popup').style.display = 'block';
+
+            fetch('/detect-fraud', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        window.location.href = '/'; // Redirect to login
+                        throw new Error('You must be logged in.');
+                    } else {
+                        return response.json().then(data => {
+                            throw new Error(data.message || 'Error analyzing file.');
+                        }).catch(() => {
+                            throw new Error('Error analyzing file.'); // Fallback error
+                        });
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    let resultsHTML = `
+                        <div style="margin-bottom: 20px;">
+                            <p><strong>Total Transactions Analyzed:</strong> ${data.total_transactions}</p>
+                            <p><strong>Potential Fraudulent Transactions:</strong> <span class="fraud-highlight">${data.fraud_count}</span> (${data.fraud_percentage.toFixed(2)}%)</p>
+                        </div>
+                    `;
+
+                    if (data.fraud_count > 0) {
+                        resultsHTML += `
+                            <h3 style="margin-bottom: 10px;">Sample Fraudulent Transactions:</h3>
+                            <div style="max-height: 300px; overflow-y: auto;">
+                                <table id="fraud-results-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Amount</th>
+                                            <th>Confidence</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                        `;
+
+                        if (data.sample_frauds && data.fraud_probabilities) {
+                            data.sample_frauds.forEach((fraud, index) => {
+                                resultsHTML += `
+                                            <tr>
+                                                <td>${fraud.Time}</td>
+                                                <td>$${fraud.Amount ? fraud.Amount.toFixed(2) : 'N/A'}</td>
+                                                <td>${(data.fraud_probabilities[index] * 100).toFixed(1)}%</td>
+                                            </tr>
+                                `;
+                            });
+                        }
+
+                        resultsHTML += `
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                                Note: These are potential frauds detected by the fraud model it can be inaccurate. Please verify manually.
+                            </p>
+                        `;
+                    } else {
+                        resultsHTML += `
+                            <div class="no-fraud">
+                                <p>No fraudulent transactions detected!</p>
+                            </div>
+                        `;
+                    }
+
+                    document.getElementById('fraud-results-content').innerHTML = resultsHTML;
+                } else {
+                    document.getElementById('fraud-results-content').innerHTML = `
+                        <div class="error-message">
+                            <p>Error: ${data.message}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error("Error during fraud detection:", error);
+                document.getElementById('fraud-results-content').innerHTML = `
+                    <div class="error-message">
+                        <p>Error analyzing file: ${error.message}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function closeFraudResults() {
+            document.getElementById('fraud-results-popup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
