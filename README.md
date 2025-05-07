@@ -56,7 +56,7 @@ python app.py
 
 ## Project Structure
 
-├── app.py # Flask application\n
+├── app.py # Flask application
 ├── model.py # GAT model definition
 ├── utils.py # Helper functions for graph construction and visualization
 ├── templates/ # HTML files
